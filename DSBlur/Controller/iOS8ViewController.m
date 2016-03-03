@@ -17,12 +17,25 @@
     [imageView setImage:[UIImage imageNamed:@"test.JPG"]];
     [self.view addSubview:imageView];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        UIVisualEffectView *effectview = [[UIVisualEffectView alloc] initWithEffect:blur];
-        effectview.frame = CGRectMake(0, 0, imageView.frame.size.width, self.view.frame.size.height);
-        [self.view addSubview:effectview];
-    });
+    
+    //对下侧的视图渲染出模糊效果
+    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    UIVisualEffectView *blurEffectview = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    blurEffectview.frame = CGRectMake(0, 0, imageView.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:blurEffectview];
+    
+    
+    
+    UILabel   *label = [[UILabel alloc] initWithFrame:CGRectMake(200, 64, 100, 30)];
+    label.text = @"高亮处理";
+    
+    //对毛玻璃效果上层的视图做出高亮突出处理（label的颜色根据毛玻璃下层的颜色改变）
+    UIVibrancyEffect *vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:blurEffect];
+    UIVisualEffectView *vibrancyEffectview = [[UIVisualEffectView alloc] initWithEffect:vibrancyEffect];
+    vibrancyEffectview.frame = CGRectMake(0, 0, imageView.frame.size.width, self.view.frame.size.height);
+    
+    [vibrancyEffectview.contentView addSubview:label];
+    [blurEffectview.contentView addSubview:vibrancyEffectview];
 }
 
 @end
